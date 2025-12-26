@@ -10,13 +10,32 @@ import AuthBase from '@/layouts/AuthLayout.vue';
 import { register } from '@/routes';
 import { store } from '@/routes/login';
 import { request } from '@/routes/password';
-import { Form, Head } from '@inertiajs/vue3';
+import { Form, Head, usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
 
 defineProps<{
     status?: string;
     canResetPassword: boolean;
     canRegister: boolean;
 }>();
+
+const page = usePage();
+const query = computed(() => {
+    const [, search = ''] = page.url.split('?');
+    return new URLSearchParams(search);
+});
+const redirect = computed(() => query.value.get('redirect') || '');
+const productId = computed(() => query.value.get('product_id') || '');
+const quantity = computed(() => query.value.get('quantity') || '');
+const registerUrl = computed(() => {
+    const params = new URLSearchParams({
+        redirect: redirect.value,
+        product_id: productId.value,
+        quantity: quantity.value,
+    });
+
+    return `${register().url}?${params.toString()}`;
+});
 </script>
 
 <template>
@@ -39,6 +58,9 @@ defineProps<{
             v-slot="{ errors, processing }"
             class="flex flex-col gap-6"
         >
+            <input v-if="redirect" type="hidden" name="redirect" :value="redirect" />
+            <input v-if="productId" type="hidden" name="product_id" :value="productId" />
+            <input v-if="quantity" type="hidden" name="quantity" :value="quantity" />
             <div class="grid gap-6">
                 <div class="grid gap-2">
                     <Label for="email">Email address</Label>
@@ -103,7 +125,7 @@ defineProps<{
                 v-if="canRegister"
             >
                 Don't have an account?
-                <TextLink :href="register()" :tabindex="5">Sign up</TextLink>
+                <TextLink :href="registerUrl" :tabindex="5">Sign up</TextLink>
             </div>
         </Form>
     </AuthBase>
