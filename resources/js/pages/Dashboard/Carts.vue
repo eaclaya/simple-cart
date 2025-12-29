@@ -38,8 +38,7 @@ const props = defineProps<{
 const expandedCartId = ref<number | null>(null);
 
 const toggleCart = (cartId: number) => {
-    expandedCartId.value =
-        expandedCartId.value === cartId ? null : cartId;
+    expandedCartId.value = expandedCartId.value === cartId ? null : cartId;
 };
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -49,7 +48,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
     {
         title: 'Carts',
-        href: '/dashboard/carts',
+        href: '/admin/carts',
     },
 ];
 
@@ -88,28 +87,35 @@ const formatPrice = (value: number | string) =>
                 <table v-else class="min-w-full divide-y divide-border text-sm">
                     <thead class="bg-muted/50 text-left text-xs uppercase">
                         <tr>
-                            <th class="px-4 py-3 font-medium text-muted-foreground">
+                            <th
+                                class="px-4 py-3 font-medium text-muted-foreground"
+                            >
                                 Cart
                             </th>
-                            <th class="px-4 py-3 font-medium text-muted-foreground">
+                            <th
+                                class="px-4 py-3 font-medium text-muted-foreground"
+                            >
                                 Items
                             </th>
-                            <th class="px-4 py-3 font-medium text-muted-foreground">
+                            <th
+                                class="px-4 py-3 font-medium text-muted-foreground"
+                            >
                                 Cart total
                             </th>
-                            <th class="px-4 py-3 font-medium text-muted-foreground">
+                            <th
+                                class="px-4 py-3 font-medium text-muted-foreground"
+                            >
                                 Updated
                             </th>
-                            <th class="px-4 py-3 font-medium text-muted-foreground">
+                            <th
+                                class="px-4 py-3 font-medium text-muted-foreground"
+                            >
                                 Actions
                             </th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-border">
-                        <template
-                            v-for="cart in props.carts"
-                            :key="cart.id"
-                        >
+                        <template v-for="cart in props.carts" :key="cart.id">
                             <tr class="hover:bg-muted/30">
                                 <td class="px-4 py-3">
                                     <div class="font-medium text-foreground">
@@ -119,10 +125,14 @@ const formatPrice = (value: number | string) =>
                                         {{ cart.user.email || '—' }}
                                     </div>
                                 </td>
-                                <td class="px-4 py-3 font-medium text-foreground">
+                                <td
+                                    class="px-4 py-3 font-medium text-foreground"
+                                >
                                     {{ cart.items_count }}
                                 </td>
-                                <td class="px-4 py-3 font-medium text-foreground">
+                                <td
+                                    class="px-4 py-3 font-medium text-foreground"
+                                >
                                     {{ formatPrice(cart.total) }}
                                 </td>
                                 <td class="px-4 py-3">
@@ -149,63 +159,112 @@ const formatPrice = (value: number | string) =>
                                 class="bg-muted/20"
                             >
                                 <td colspan="5" class="px-4 py-4">
-                                    <div class="rounded-md border border-border bg-background">
-                                        <table class="min-w-full divide-y divide-border text-sm">
-                                            <thead class="bg-muted/40 text-left text-xs uppercase">
+                                    <div
+                                        class="rounded-md border border-border bg-background"
+                                    >
+                                        <table
+                                            class="min-w-full divide-y divide-border text-sm"
+                                        >
+                                            <thead
+                                                class="bg-muted/40 text-left text-xs uppercase"
+                                            >
                                                 <tr>
-                                                    <th class="px-3 py-2 font-medium text-muted-foreground">
+                                                    <th
+                                                        class="px-3 py-2 font-medium text-muted-foreground"
+                                                    >
                                                         Product
                                                     </th>
-                                                    <th class="px-3 py-2 font-medium text-muted-foreground">
+                                                    <th
+                                                        class="px-3 py-2 font-medium text-muted-foreground"
+                                                    >
                                                         Quantity
                                                     </th>
-                                                    <th class="px-3 py-2 font-medium text-muted-foreground">
+                                                    <th
+                                                        class="px-3 py-2 font-medium text-muted-foreground"
+                                                    >
                                                         Line total
                                                     </th>
-                                                    <th class="px-3 py-2 font-medium text-muted-foreground">
+                                                    <th
+                                                        class="px-3 py-2 font-medium text-muted-foreground"
+                                                    >
                                                         Added
                                                     </th>
                                                 </tr>
                                             </thead>
-                                            <tbody class="divide-y divide-border">
+                                            <tbody
+                                                class="divide-y divide-border"
+                                            >
                                                 <tr
                                                     v-for="item in cart.items"
                                                     :key="item.id"
                                                 >
                                                     <td class="px-3 py-2">
-                                                        <div class="flex items-center gap-3">
+                                                        <div
+                                                            class="flex items-center gap-3"
+                                                        >
                                                             <img
                                                                 :src="
-                                                                    item.product.image_url ||
+                                                                    item.product
+                                                                        .image_url ||
                                                                     'https://tailwindcss.com/plus-assets/img/ecommerce-images/category-page-01-image-card-01.jpg'
                                                                 "
-                                                                :alt="item.product.name || 'Product'"
+                                                                :alt="
+                                                                    item.product
+                                                                        .name ||
+                                                                    'Product'
+                                                                "
                                                                 class="size-9 rounded-md object-cover"
                                                             />
                                                             <div>
-                                                                <div class="font-medium text-foreground">
-                                                                    {{ item.product.name || 'Unknown' }}
+                                                                <div
+                                                                    class="font-medium text-foreground"
+                                                                >
+                                                                    {{
+                                                                        item
+                                                                            .product
+                                                                            .name ||
+                                                                        'Unknown'
+                                                                    }}
                                                                 </div>
-                                                                <div class="text-xs text-muted-foreground">
+                                                                <div
+                                                                    class="text-xs text-muted-foreground"
+                                                                >
                                                                     <Link
-                                                                        v-if="item.product.id"
+                                                                        v-if="
+                                                                            item
+                                                                                .product
+                                                                                .id
+                                                                        "
                                                                         class="hover:underline"
                                                                         :href="`/products/${item.product.id}`"
                                                                     >
-                                                                        View product
+                                                                        View
+                                                                        product
                                                                     </Link>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </td>
-                                                    <td class="px-3 py-2 font-medium text-foreground">
+                                                    <td
+                                                        class="px-3 py-2 font-medium text-foreground"
+                                                    >
                                                         {{ item.quantity }}
                                                     </td>
-                                                    <td class="px-3 py-2 font-medium text-foreground">
-                                                        {{ formatPrice(item.line_total) }}
+                                                    <td
+                                                        class="px-3 py-2 font-medium text-foreground"
+                                                    >
+                                                        {{
+                                                            formatPrice(
+                                                                item.line_total,
+                                                            )
+                                                        }}
                                                     </td>
-                                                    <td class="px-3 py-2 text-muted-foreground">
-                                                        {{ item.added_at || '—' }}
+                                                    <td
+                                                        class="px-3 py-2 text-muted-foreground"
+                                                    >
+                                                        {{
+                                                            item.added_at || '—'
+                                                        }}
                                                     </td>
                                                 </tr>
                                             </tbody>

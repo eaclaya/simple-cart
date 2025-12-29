@@ -22,7 +22,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
     {
         title: 'Products',
-        href: '/dashboard/products',
+        href: '/admin/products',
     },
 ];
 
@@ -127,6 +127,7 @@ const formatPrice = (value: number | string) =>
                                 <Link
                                     class="text-primary hover:underline"
                                     :href="`/products/${product.id}`"
+                                    target="_blank"
                                 >
                                     View
                                 </Link>

@@ -24,17 +24,17 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Products',
-        href: '/dashboard/products',
+        href: '/admin/products',
         icon: Package,
     },
     {
         title: 'Cart',
-        href: '/dashboard/carts',
+        href: '/admin/carts',
         icon: ShoppingCart,
     },
     {
         title: 'Orders',
-        href: '/dashboard/orders',
+        href: '/admin/orders',
         icon: Receipt,
     },
 ];
