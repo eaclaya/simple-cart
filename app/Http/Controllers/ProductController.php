@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -12,7 +13,7 @@ class ProductController extends Controller
     {
         $products = Product::query()
             ->orderBy('name')
-            ->get(['id', 'name', 'price', 'stock_quantity', 'image_url']);
+            ->get();
 
         $cartItemQuantities = $request->user()
             ? $request->user()
@@ -22,9 +23,8 @@ class ProductController extends Controller
             : [];
 
         return Inertia::render('Products/Index', [
-            'products' => $products,
+            'products' => ProductResource::collection($products),
             'cartItemQuantities' => $cartItemQuantities,
         ]);
     }
-
 }

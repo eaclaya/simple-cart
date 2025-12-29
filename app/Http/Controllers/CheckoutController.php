@@ -2,24 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreOrderRequest;
 use App\Jobs\SendLowStockNotification;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class CheckoutController extends Controller
 {
-    public function store(Request $request)
+    public function store(StoreOrderRequest $request)
     {
         $user = $request->user();
         $cartItems = $user->cartItems()->with('product')->get();
-
-        if ($cartItems->isEmpty()) {
-            return back()->withErrors(['cart' => 'Your cart is empty.']);
-        }
 
         DB::transaction(function () use ($cartItems, $user) {
             $total = 0;

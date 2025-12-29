@@ -278,6 +278,5 @@ const addToCart = (productId) => {
     );
 };
 
-const mobileMenuOpen = ref(false);
 const mobileFiltersOpen = ref(false);
 </script>

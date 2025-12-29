@@ -26,11 +26,9 @@ composer dev
 
 The application will be available at http://localhost:8000
 
-## Manual Setup
+## Initial Setup
 
-If you prefer to set up manually:
-
-```bash
+````bash
 # Install PHP dependencies
 composer install
 
@@ -43,12 +41,9 @@ php artisan key:generate
 # Run database migrations
 php artisan migrate
 
-# Install Node.js dependencies
-npm install
+# Run seeders
+php artisan db:seed
 
-# Build frontend assets
-npm run build
-```
 
 ## Development
 
@@ -56,7 +51,7 @@ Start all development services (server, queue, logs, vite):
 
 ```bash
 composer dev
-```
+````
 
 Or run services individually:
 
@@ -120,42 +115,6 @@ npm run lint
 # Build for production
 npm run build
 
-# Build with SSR
-npm run build:ssr
-composer dev:ssr
-```
-
-## Project Structure
-
-```
-simple-cart/
-├── app/
-│   ├── Http/Controllers/    # Request handlers
-│   ├── Models/              # Eloquent models
-│   ├── Mail/                # Mailable classes
-│   └── Jobs/                # Queue jobs
-├── resources/
-│   ├── js/
-│   │   ├── components/      # Vue components
-│   │   ├── pages/           # Inertia pages
-│   │   └── layouts/         # Page layouts
-│   └── views/
-│       └── emails/          # Email templates
-├── routes/
-│   ├── web.php              # Web routes
-│   └── console.php          # Artisan commands
-└── docker-compose.yml       # Docker services
-```
-
-## Features
-
-- Product catalog with stock management
-- Shopping cart with quantity controls
-- User authentication (login/register)
-- Guest cart persistence through authentication
-- Order checkout flow
-- Email notifications (low stock, daily reports)
-- Toast notifications for user feedback
 
 ## Tech Stack
 
@@ -169,3 +128,4 @@ simple-cart/
 ## License
 
 MIT
+```

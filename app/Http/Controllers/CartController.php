@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DestroyCartItemRequest;
+use App\Http\Requests\StoreCartItemRequest;
+use App\Http\Requests\UpdateCartItemRequest;
+use App\Http\Resources\CartItemResource;
 use App\Models\CartItem;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
 class CartController extends Controller
@@ -13,42 +16,27 @@ class CartController extends Controller
     public function index(Request $request)
     {
         $items = collect();
+        $subtotal = 0;
 
         if ($request->user()) {
-            $items = $request->user()
+            $cartItems = $request->user()
                 ->cartItems()
                 ->with('product')
-                ->get()
-                ->map(function (CartItem $item) {
-                    $lineTotal = $item->quantity * $item->product->price;
+                ->get();
 
-                    return [
-                        'id' => $item->id,
-                        'quantity' => $item->quantity,
-                        'product' => [
-                            'id' => $item->product->id,
-                            'name' => $item->product->name,
-                            'price' => $item->product->price,
-                            'stock_quantity' => $item->product->stock_quantity,
-                            'image_url' => $item->product->image_url,
-                        ],
-                        'line_total' => $lineTotal,
-                    ];
-                });
+            $items = CartItemResource::collection($cartItems);
+            $subtotal = $cartItems->sum(fn ($item) => $item->quantity * $item->product->price);
         }
 
         return Inertia::render('Cart/Index', [
             'items' => $items,
-            'subtotal' => $items->sum('line_total'),
+            'subtotal' => $subtotal,
         ]);
     }
 
-    public function store(Request $request)
+    public function store(StoreCartItemRequest $request)
     {
-        $validated = $request->validate([
-            'product_id' => ['required', 'exists:products,id'],
-            'quantity' => ['required', 'integer', 'min:1'],
-        ]);
+        $validated = $request->validated();
 
         $product = Product::findOrFail($validated['product_id']);
         $cart = $request->user()->cart()->firstOrCreate();
@@ -59,35 +47,15 @@ class CartController extends Controller
 
         $newQuantity = $cartItem->exists ? $cartItem->quantity + $validated['quantity'] : $validated['quantity'];
 
-        if ($newQuantity > $product->stock_quantity) {
-            throw ValidationException::withMessages([
-                'quantity' => 'Requested quantity exceeds available stock.',
-            ]);
-        }
-
         $cartItem->quantity = $newQuantity;
         $cartItem->save();
 
         return back()->with('success', "{$product->name} added to cart");
     }
 
-    public function update(Request $request, CartItem $cartItem)
+    public function update(UpdateCartItemRequest $request, CartItem $cartItem)
     {
-        if ($cartItem->cart?->user_id !== $request->user()->id) {
-            abort(403);
-        }
-
-        $validated = $request->validate([
-            'quantity' => ['required', 'integer', 'min:1'],
-        ]);
-
-        $product = $cartItem->product;
-
-        if ($validated['quantity'] > $product->stock_quantity) {
-            throw ValidationException::withMessages([
-                'quantity' => 'Requested quantity exceeds available stock.',
-            ]);
-        }
+        $validated = $request->validated();
 
         $cartItem->update([
             'quantity' => $validated['quantity'],
@@ -96,12 +64,8 @@ class CartController extends Controller
         return back()->with('success', 'Cart updated');
     }
 
-    public function destroy(Request $request, CartItem $cartItem)
+    public function destroy(DestroyCartItemRequest $request, CartItem $cartItem)
     {
-        if ($cartItem->cart?->user_id !== $request->user()->id) {
-            abort(403);
-        }
-
         $productName = $cartItem->product->name;
         $cartItem->delete();
 
